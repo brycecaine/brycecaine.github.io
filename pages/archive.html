@@ -52,8 +52,7 @@
 <meta property="og:url" content="https://www.brycecaine.com"/>
 <meta property="og:image" content="https://www.brycecaine.com/images/brycecaine.jpg">
 
-  <title>Bryce Caine's Blog &ndash;     Posts by Bryce Caine
-:</title>
+  <title>Bryce Caine's Blog &ndash; Archive</title>
 
 <!-- Google Tag Manager -->
 <script>
@@ -111,31 +110,23 @@
 
     </nav>
 
-
-
-<article>
+<article class="single">
   <header>
-    <h2><a href="https://www.brycecaine.com/my-first-review.html#my-first-review">My First Review</a></h2>
-    <p>
-          Posted on Fri 03 December 2010 in <a href="https://www.brycecaine.com/category/review.html">Review</a>
-
-
-
-    </p>
+    
+    <h1 id="archive">Archive</h1>
   </header>
   <div>
-      <p>Following is a review of my favorite mechanical keyboard.</p>
-      <br>
-      <a class="btn" href="https://www.brycecaine.com/my-first-review.html#my-first-review">    Continue reading
-</a>
-  </div>
+<div>
+    {% for post in site.posts %}
+        {% assign currentdate = post.date | date: "%Y" %}
+        {% if currentdate != date %}
+            <h2 id="y{{currentdate}}">{{ currentdate }}</h2>
+            {% assign date = currentdate %} 
+        {% endif %}
+        <p><a href="{{ post.url }}">{{ post.title }}</a></p>
+    {% endfor %}
+</div>  </div>
 </article>
-
-  <div class="pagination">
-  </div>
-
-
-
 
     <footer>
 <p>&copy;  2018</p>
