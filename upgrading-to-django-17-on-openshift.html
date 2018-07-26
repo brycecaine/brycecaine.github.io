@@ -33,15 +33,6 @@
   ga('send', 'pageview');
 </script>
 <!-- End Google Analytics -->
-    <!-- Chrome, Firefox OS and Opera -->
-    <meta name="theme-color" content="#ABC">
-    <!-- Windows Phone -->
-    <meta name="msapplication-navbutton-color" content="#ABC">
-    <!-- iOS Safari -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- Microsoft EDGE -->
-    <meta name="msapplication-TileColor" content="#ABC">
 
 <meta name="author" content="Bryce Caine" />
 <meta name="description" content="Here are some key changes that I needed when upgrading to Django 1.7 on OpenShift. Modify app-root/repo/wsgi/openshift/settings.py Add: sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(file), &#39;openshift/&#39;))) Replace: import django.core.handlers.wsgi application = django.core.handlers.wsgi …" />
