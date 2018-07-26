@@ -43,18 +43,23 @@
     <!-- Microsoft EDGE -->
     <meta name="msapplication-TileColor" content="#ABC">
 
-    <meta name="author" content="Bryce Caine" />
-    <meta name="description" content="Blog" />
+<meta name="author" content="Bryce Caine" />
+<meta name="description" content="Here is how I implemented Sentry on an app I&#39;m hosting on Open Shift. From my home directory after ssh&#39;ing to my Open Shift box: Activate the python virtual environment source ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate Install the sentry python package pip install raven Add this to …" />
+<meta name="keywords" content="">
+
 <meta property="og:site_name" content="Bryce Caine's Blog"/>
-<meta property="og:type" content="blog"/>
-<meta property="og:title" content="Bryce Caine's Blog"/>
-<meta property="og:description" content="Blog"/>
+<meta property="og:title" content="Sentry on Open Shift"/>
+<meta property="og:description" content="Here is how I implemented Sentry on an app I&#39;m hosting on Open Shift. From my home directory after ssh&#39;ing to my Open Shift box: Activate the python virtual environment source ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate Install the sentry python package pip install raven Add this to …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://www.brycecaine.com"/>
+<meta property="og:url" content="https://www.brycecaine.com/sentry-on-open-shift.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2014-09-19 00:00:00-06:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://www.brycecaine.com/author/bryce-caine.html">
+<meta property="article:section" content="misc"/>
 <meta property="og:image" content="https://www.brycecaine.com/images/brycecaine.jpg">
 
-  <title>Bryce Caine's Blog &ndash;     Authors
-</title>
+  <title>Bryce Caine's Blog &ndash; Sentry on Open Shift</title>
 
 <!-- Google Tag Manager -->
 <script>
@@ -117,14 +122,89 @@
 
 <article class="single">
   <header>
-    <h1>    Authors
-</h1>
+      
+    <h1 id="sentry-on-open-shift">Sentry on Open Shift</h1>
+    <p>
+          Posted on Fri 19 September 2014 in <a href="https://www.brycecaine.com/category/misc.html">misc</a>
+
+
+    </p>
   </header>
+
+
   <div>
-    <ul class="list">
-      <li><a href="https://www.brycecaine.com/author/bryce-caine.html">Bryce Caine</a> (11)</li>
-    </ul>
+    <p>Here is how I implemented Sentry on an app I'm hosting on Open Shift.</p>
+<p>From my home directory after ssh'ing to my Open Shift box:</p>
+<p>Activate the python virtual environment</p>
+<div class="highlight"><pre><span></span><span class="nb">source</span> ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate
+</pre></div>
+
+
+<p>Install the sentry python package</p>
+<div class="highlight"><pre><span></span>pip install raven
+</pre></div>
+
+
+<p>Add this to <code>app-root/repo/wsgi/openshift/settings.py</code></p>
+<div class="highlight"><pre><span></span><span class="n">RAVEN_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;dsn&#39;</span><span class="p">:</span> <span class="s1">&#39;https://veryverylonghashfromsentry@app.getsentry.com/fivedigitnumber&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># Add to INSTALLED_APPS</span>
+<span class="s1">&#39;raven.contrib.django.raven_compat&#39;</span><span class="p">,</span>
+</pre></div>
+
+
+<p>Add this to the wsgi script (app-root/repo/wsgi/application)</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">raven.contrib.django.raven_compat.middleware.wsgi</span> <span class="kn">import</span> <span class="n">Sentry</span>
+<span class="kn">from</span> <span class="nn">django.core.handlers.wsgi</span> <span class="kn">import</span> <span class="n">WSGIHandler</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">Sentry</span><span class="p">(</span><span class="n">WSGIHandler</span><span class="p">())</span>
+</pre></div>
+
+
+<p>Test that it's working</p>
+<div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">app</span><span class="o">-</span><span class="n">root</span><span class="o">/</span><span class="n">runtime</span><span class="o">/</span><span class="n">repo</span><span class="o">/</span><span class="n">wsgi</span><span class="o">/</span><span class="n">openshift</span>
+<span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">raven</span> <span class="n">test</span>
+</pre></div>
+
+
+<p>References:</p>
+<p><a href="https://app.getsentry.com/project-name/app-name/docs/django">Sentry</a></p>
+<p><a href="http://raven.readthedocs.org/en/latest/config/django.html">Raven</a></p>
   </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+  <div class="center social-share">
+    <p>    Like this article? Share it with your friends!
+</p>
+    <div class="addthis_native_toolbox"></div>
+    <div class="addthis_sharing_toolbox"></div>
+    <div class="addthis_inline_share_toolbox"></div>
+  </div>
+
+
+    <div class="addthis_relatedposts_inline"></div>
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'brycecaine';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
 </article>
 
     <footer>

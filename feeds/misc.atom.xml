@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Bryce Caine's Blog - misc</title><link href="https://www.brycecaine.com/" rel="alternate"></link><link href="https://www.brycecaine.com/feeds/misc.atom.xml" rel="self"></link><id>https://www.brycecaine.com/</id><updated>2018-04-13T00:00:00-06:00</updated><entry><title>"Exploring Data Streams"</title><link href="https://www.brycecaine.com/exploring-data-streams.html" rel="alternate"></link><published>2018-04-13T00:00:00-06:00</published><updated>2018-04-13T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2018-04-13:/exploring-data-streams.html</id><summary type="html">&lt;h1&gt;Resources&lt;/h1&gt;
+&lt;p&gt;Good read on why data streams should be considered first-class citizens in data infrastructure: &lt;a href="https://www.confluent.io/blog/the-future-of-etl-isnt-what-it-used-to-be"&gt;The Future of ETL Isn’t What It Used To Be&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Interesting video on using a streaming platform for ETL: &lt;a href="https://vimeo.com/220846693/305dfdb663"&gt;ETL is Dead! Long Live Streams&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;Thoughts&lt;/h1&gt;
+&lt;p&gt;My curiosity was sparked by &lt;a href="https://kafka.apache.org"&gt;Kafka&lt;/a&gt; and &lt;a href="https://avro.apache.org"&gt;Avro …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Resources&lt;/h1&gt;
+&lt;p&gt;Good read on why data streams should be considered first-class citizens in data infrastructure: &lt;a href="https://www.confluent.io/blog/the-future-of-etl-isnt-what-it-used-to-be"&gt;The Future of ETL Isn’t What It Used To Be&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Interesting video on using a streaming platform for ETL: &lt;a href="https://vimeo.com/220846693/305dfdb663"&gt;ETL is Dead! Long Live Streams&lt;/a&gt;&lt;/p&gt;
+&lt;h1&gt;Thoughts&lt;/h1&gt;
+&lt;p&gt;My curiosity was sparked by &lt;a href="https://kafka.apache.org"&gt;Kafka&lt;/a&gt; and &lt;a href="https://avro.apache.org"&gt;Avro&lt;/a&gt; by listening to &lt;a href="https://www.drilltodetail.com/podcast/2017/5/22/drill-to-detail-ep27-apache-kafka-streaming-data-integration-and-schema-registry-with-special-guest-gwen-shapira"&gt;episode 27 of the Drill to Detail podcast&lt;/a&gt;. It's a pretty fascinating technology. I got to hello-world with Kafka a few weeks ago but haven't explored further yet. From all I've learned I wonder if it's the technology underlying Ellucian Ethos.&lt;/p&gt;
+&lt;p&gt;Overall I visualize a bunch of databases as pools, and traditionally when we need to get water from one to another, we would connect a pipe from one to another. With streams, it's like all the pools are pumping into a central stream that can be routed to whatever other pool needs specific water. (Not an amazing analogy, but it helps to visualize a little bit.) If done right, it seems like streams can really enliven an organization.&lt;/p&gt;</content></entry><entry><title>Running Selenium in Headless Mode with Firefox</title><link href="https://www.brycecaine.com/running-selenium-in-headless-mode-with-firefox.html" rel="alternate"></link><published>2018-04-11T00:00:00-06:00</published><updated>2018-04-11T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2018-04-11:/running-selenium-in-headless-mode-with-firefox.html</id><summary type="html">&lt;p&gt;There's something super satisfying about having a development VM in the cloud. I can ssh to it from any device, tmux to persist sessions, and develop with vim virtually anywhere.&lt;/p&gt;
+&lt;p&gt;So I decided to start learning more about test-driven development. I saw good reviews for "Test-Driven Development with Python, 2nd …&lt;/p&gt;</summary><content type="html">&lt;p&gt;There's something super satisfying about having a development VM in the cloud. I can ssh to it from any device, tmux to persist sessions, and develop with vim virtually anywhere.&lt;/p&gt;
+&lt;p&gt;So I decided to start learning more about test-driven development. I saw good reviews for "Test-Driven Development with Python, 2nd Edition" by Harry J.W. Percival, so I thought I'd start reading it to augment side projects and other learning.&lt;/p&gt;
+&lt;p&gt;To merge the two ideas--a VM in the cloud and test-driven development with Django and Selenium--I needed to go headless. So here's how I set up my Ubuntu 17.10 environment.&lt;/p&gt;
+&lt;p&gt;These notes are based on Chapter 1. "Getting Django Set Up Using a Functional Test", and the package versions match the book requirements.&lt;/p&gt;
+&lt;h3&gt;Set up the needed python environment and packages&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install python3-pip
+sudo pip3 install virtualenv
+virtualenv tddp
+&lt;span class="nb"&gt;source&lt;/span&gt; tddp/bin/activate
+pip3 install &lt;span class="nv"&gt;Django&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.11.8
+pip3 install &lt;span class="nv"&gt;selenium&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="m"&gt;3&lt;/span&gt;.9.0
+wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
+tar -xvzf geckodriver-v0.19.1-linux64.tar.gz
+sudo cp geckodriver /usr/local/bin/
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Modify the functional_tests.py script&lt;/h3&gt;
+&lt;h4&gt;From the book&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;selenium&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;webdriver&lt;/span&gt;
+
+&lt;span class="n"&gt;browser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;webdriver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Firefox&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;browser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://localhost:8000&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Django&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;browser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Modified version to support headless&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;selenium&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;webdriver&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;selenium.webdriver.firefox.options&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Options&lt;/span&gt;
+
+&lt;span class="n"&gt;options&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Options&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;options&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;--headless&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;browser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;webdriver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Firefox&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;firefox_options&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;options&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;browser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://localhost:8000&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Django&amp;#39;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;browser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>NCES 2014-15 Data Analysis</title><link href="https://www.brycecaine.com/nces-2014-15-data-analysis.html" rel="alternate"></link><published>2017-07-21T00:00:00-06:00</published><updated>2017-07-21T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2017-07-21:/nces-2014-15-data-analysis.html</id><summary type="html">&lt;h3&gt;Goal&lt;/h3&gt;
+&lt;p&gt;Explore correlation between school size and number of students eligible for free and reduced price lunches&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Import data sets&lt;/span&gt;
+&lt;span class="n"&gt;membership_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;m1415.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;school_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;s1415.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;lunch_df …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h3&gt;Goal&lt;/h3&gt;
+&lt;p&gt;Explore correlation between school size and number of students eligible for free and reduced price lunches&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;matplotlib&lt;/span&gt; &lt;span class="n"&gt;inline&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Import data sets&lt;/span&gt;
+&lt;span class="n"&gt;membership_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;m1415.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;school_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;s1415.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;lunch_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_csv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;frpl1415.csv&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;sep&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Join data sets&lt;/span&gt;
+&lt;span class="n"&gt;memschool_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;membership_df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;school_df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;how&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;NCESSCH&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;NCESSCH&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="n"&gt;memlunch_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;merge&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;membership_df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lunch_df&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;how&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;left&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;NCESSCH&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;NCESSCH&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Ensure joining didn&amp;#39;t filter or proliferate records&lt;/span&gt;
+&lt;span class="n"&gt;memschool_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NCESSCH&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;100187
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Ensure joining didn&amp;#39;t filter or proliferate records&lt;/span&gt;
+&lt;span class="n"&gt;memlunch_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NCESSCH&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;100187
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Filter out `-1` values&lt;/span&gt;
+&lt;span class="n"&gt;lunch_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;memlunch_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;memlunch_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;TOTAL&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;lunch_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;memlunch_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;memlunch_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;TOTFRL&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;lunch_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NCESSCH&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;97275
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Finding&lt;/h3&gt;
+&lt;p&gt;There seems to be a small correlation between total free-and-reduced-price-lunch and total enrollment, but the fact that there are many schools that have enrollment that do not have free-and-reduced-price-lunch eligible students discouraged further exploration.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Visualize data to detect possible correlation&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lunch_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TOTAL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lunch_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TOTFRL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Enrollment&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Total FRP Lunch&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;NCES 2014-15 Total FRP Lunch by Enrollment&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;matplotlib.text.Text at 0x11a7799d0&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="http://www.brycecaine.com/assets/images/output_7_1.png"&gt;&lt;/p&gt;
+&lt;h3&gt;Pivot&lt;/h3&gt;
+&lt;p&gt;Explore total enrollment by grade&lt;/p&gt;
+&lt;p&gt;Attempted to filter out enrollments below zero, but realized that there are very few schools with all grades from preschool to grade 12.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;grades&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;PK&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;KG&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G01&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G02&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G03&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G04&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G05&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G06&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G07&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G08&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G09&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G10&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G11&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G12&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="n"&gt;grades_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;memschool_df&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;grade&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;grades_df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;grades_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;grades_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;grade&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="n"&gt;grades_df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NCESSCH&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;1218
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Ending Analysis&lt;/h3&gt;
+&lt;p&gt;Although this data set contains the negative values in each grade-enrollment column, it is still useful to see a trend. The noticeable spike at grade 9 followed by the gradual decline through grade 12 is worth future investigation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;grade_nums&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;enrollment&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;memschool_df&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;grade_nums&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;enrollment&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;xticks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;grade_nums&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;grades&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Enrollment&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;NCES 2014-15 Enrollment by Grade&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;matplotlib.text.Text at 0x124c7c250&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="png" src="http://www.brycecaine.com/assets/images/output_11_1.png"&gt;&lt;/p&gt;</content></entry><entry><title>Insights Building ETL to Redshift</title><link href="https://www.brycecaine.com/insights-building-etl-to-redshift.html" rel="alternate"></link><published>2017-01-21T00:00:00-07:00</published><updated>2017-01-21T00:00:00-07:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2017-01-21:/insights-building-etl-to-redshift.html</id><summary type="html">&lt;p&gt;I've spent many hours at work lately developing a process to load data into our new AWS Redshift instance. I'm looking forward to when this ETL process will be ready for production. The plan is to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Provide a simple way to add ETL jobs, whether they be overwrites or appends …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;I've spent many hours at work lately developing a process to load data into our new AWS Redshift instance. I'm looking forward to when this ETL process will be ready for production. The plan is to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Provide a simple way to add ETL jobs, whether they be overwrites or appends&lt;/li&gt;
+&lt;li&gt;Allow for initial and ongoing loads&lt;/li&gt;
+&lt;li&gt;Adhere to best practices in loading data into Redshift&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;ETL Jobs&lt;/h3&gt;
+&lt;p&gt;The idea behind adding an ETL job will be to add all of the needed SQL statements as independent files, and then a corresponding python dictionary in the ETL script. (Eventually, I'm hoping to replace these dictionaries with database tables and hook a Django app into it.) An ETL job can be designated as an overwrite or an append. For now, overwrites will consist of deleting pertinent data and then appending updated data (similar to &lt;a href="http://docs.aws.amazon.com/redshift/latest/dg/t_updating-inserting-using-staging-tables-.html#merge-method-replace-existing-rows"&gt;this approach&lt;/a&gt; in the AWS documentation). Rather than creating staging tables, though, S3 is utilized to stage the data as CSVs.&lt;sup&gt;&lt;a href="#footnote1"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;h3&gt;Initial and Ongoing&lt;/h3&gt;
+&lt;p&gt;Adding a new ETL job consists of developing SQL scripts related to both the initial load as well as ongoing loads. The initial job includes creating the destination table, given the proper create statement, and skips creating it if it already exists. Ongoing jobs will consist of daily, weekly, semi-monthly, etc.&lt;/p&gt;
+&lt;p&gt;To ensure performance, I am planning on making deep copies of tables that are updated daily or less frequently. Eventually, when I have tables that are updated more frequently, I will utilize the &lt;code&gt;vacuum&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;As I continue developing this solution, I will post more on the progress.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;a name="footnote1"&gt;1&lt;/a&gt;: When I was at AWS re:Invent last November, I took occasion to ask an AWS engineer how he would handle periodically updating data in Redshift. He asked how many rows I was talking about, and I responded several thousand. He recommended using S3 to stage CSVs and then the &lt;code&gt;copy&lt;/code&gt; command to load the data into tables. As I've compared loading data via insert statements versus the &lt;code&gt;copy&lt;/code&gt; command, I can verify the fact that "the COPY command is many times faster and more efficient than INSERT commands" (&lt;a href="http://docs.aws.amazon.com/redshift/latest/dg/tutorial-loading-data.html"&gt;AWS Redshift Tutorial&lt;/a&gt;).&lt;/p&gt;</content></entry><entry><title>Trip to Port Angeles and Victoria</title><link href="https://www.brycecaine.com/trip-to-port-angeles-and-victoria.html" rel="alternate"></link><published>2016-07-07T00:00:00-06:00</published><updated>2016-07-07T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2016-07-07:/trip-to-port-angeles-and-victoria.html</id><summary type="html">&lt;p&gt;pull from journal&lt;/p&gt;</summary><content type="html">&lt;p&gt;pull from journal&lt;/p&gt;</content></entry><entry><title>Upgrading to Django 1.7 on OpenShift</title><link href="https://www.brycecaine.com/upgrading-to-django-17-on-openshift.html" rel="alternate"></link><published>2014-09-23T00:00:00-06:00</published><updated>2014-09-23T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2014-09-23:/upgrading-to-django-17-on-openshift.html</id><summary type="html">&lt;p&gt;Here are some key changes that I needed when upgrading to Django 1.7 on OpenShift.&lt;/p&gt;
+&lt;p&gt;Modify &lt;code&gt;app-root/repo/wsgi/openshift/settings.py&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Add:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;insert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;abspath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dirname&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;openshift/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Replace:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;django.core.handlers.wsgi&lt;/span&gt;
+&lt;span class="n"&gt;application&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;handlers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wsgi …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Here are some key changes that I needed when upgrading to Django 1.7 on OpenShift.&lt;/p&gt;
+&lt;p&gt;Modify &lt;code&gt;app-root/repo/wsgi/openshift/settings.py&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Add:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;insert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;abspath&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dirname&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;openshift/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Replace:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;django.core.handlers.wsgi&lt;/span&gt;
+&lt;span class="n"&gt;application&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;django&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;handlers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wsgi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;WSGIHandler&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;... with&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.wsgi&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;getwsgiapplication&lt;/span&gt;
+&lt;span class="n"&gt;application&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;getwsgiapplication&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Modify &lt;code&gt;app-root/repo/wsgi/application&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Add:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ALLOWED_HOSTS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;.rhcloud.com&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>New Relic on Open Shift</title><link href="https://www.brycecaine.com/new-relic-on-open-shift.html" rel="alternate"></link><published>2014-09-19T00:00:00-06:00</published><updated>2014-09-19T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2014-09-19:/new-relic-on-open-shift.html</id><summary type="html">&lt;p&gt;Here is how I implemented New Relic on an app I'm hosting on Open Shift.&lt;/p&gt;
+&lt;p&gt;From my home directory after ssh'ing to my openshift box:&lt;/p&gt;
+&lt;p&gt;Activate the python virtual environment&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;source&lt;/span&gt; ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install the newrelic python package&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install newrelic
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Generate agent config …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Here is how I implemented New Relic on an app I'm hosting on Open Shift.&lt;/p&gt;
+&lt;p&gt;From my home directory after ssh'ing to my openshift box:&lt;/p&gt;
+&lt;p&gt;Activate the python virtual environment&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;source&lt;/span&gt; ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install the newrelic python package&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install newrelic
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Generate agent config file&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;newrelic-admin generate-config NEW-RELIC-LICENSE-KEY ./app-root/runtime/dependencies/python/virtenv/lib/python2.7/site-packages/newrelic-2.30.0.27/newrelic/newrelic.ini
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Test that it's working&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;newrelic-admin validate-config ./app-root/runtime/dependencies/python/virtenv/lib/python2.7/site-packages/newrelic-2.30.0.27/newrelic/newrelic.ini
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Modify the wsgi script&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; app-root/runtime/repo/wsgi/
+vim application
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Add these two lines to the top:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;newrelic.agent&lt;/span&gt;
+&lt;span class="n"&gt;newrelic&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;agent&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;initialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;./app-root/runtime/dependencies/python/virtenv/lib/python2.7/site-packages/newrelic-2.30.0.27/newrelic/newrelic.ini&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Reference:
+&lt;a href="https://docs.newrelic.com/docs/agents/python-agent/getting-started/python-agent-quick-start"&gt;New Relic&lt;/a&gt;&lt;/p&gt;</content></entry><entry><title>Sentry on Open Shift</title><link href="https://www.brycecaine.com/sentry-on-open-shift.html" rel="alternate"></link><published>2014-09-19T00:00:00-06:00</published><updated>2014-09-19T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2014-09-19:/sentry-on-open-shift.html</id><summary type="html">&lt;p&gt;Here is how I implemented Sentry on an app I'm hosting on Open Shift.&lt;/p&gt;
+&lt;p&gt;From my home directory after ssh'ing to my Open Shift box:&lt;/p&gt;
+&lt;p&gt;Activate the python virtual environment&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;source&lt;/span&gt; ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install the sentry python package&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install raven
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Add this to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Here is how I implemented Sentry on an app I'm hosting on Open Shift.&lt;/p&gt;
+&lt;p&gt;From my home directory after ssh'ing to my Open Shift box:&lt;/p&gt;
+&lt;p&gt;Activate the python virtual environment&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;source&lt;/span&gt; ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Install the sentry python package&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install raven
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Add this to &lt;code&gt;app-root/repo/wsgi/openshift/settings.py&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;RAVEN_CONFIG&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;dsn&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;https://veryverylonghashfromsentry@app.getsentry.com/fivedigitnumber&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Add to INSTALLED_APPS&lt;/span&gt;
+&lt;span class="s1"&gt;&amp;#39;raven.contrib.django.raven_compat&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Add this to the wsgi script (app-root/repo/wsgi/application)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;raven.contrib.django.raven_compat.middleware.wsgi&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Sentry&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.core.handlers.wsgi&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;WSGIHandler&lt;/span&gt;
+
+&lt;span class="n"&gt;application&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Sentry&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;WSGIHandler&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Test that it's working&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;runtime&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;repo&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wsgi&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;openshift&lt;/span&gt;
+&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;manage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="n"&gt;raven&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;References:&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://app.getsentry.com/project-name/app-name/docs/django"&gt;Sentry&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://raven.readthedocs.org/en/latest/config/django.html"&gt;Raven&lt;/a&gt;&lt;/p&gt;</content></entry><entry><title>Our Work/Vacation Trip</title><link href="https://www.brycecaine.com/our-workvacation-trip.html" rel="alternate"></link><published>2014-09-14T00:00:00-06:00</published><updated>2014-09-14T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2014-09-14:/our-workvacation-trip.html</id><summary type="html">&lt;p&gt;Recently our family had the opportunity to visit Washington.  DjangoCon 2014 was held in Portland, Oregon, and my boss gave the go-ahead for me to attend it. We also got clearance from our daughter's pulmonary-hypertension doctor to go.  So, August 29th came, and away we went... on the road!&lt;/p&gt;
+&lt;p&gt;We …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently our family had the opportunity to visit Washington.  DjangoCon 2014 was held in Portland, Oregon, and my boss gave the go-ahead for me to attend it. We also got clearance from our daughter's pulmonary-hypertension doctor to go.  So, August 29th came, and away we went... on the road!&lt;/p&gt;
+&lt;p&gt;We left Cedar City at around 1:30pm, stopped in Parawon to see the county-fair exhibits (pictures) we all submitted, and arrived at a Boise hotel around 11pm. The next morning, after eating a quick continental breakfast (with Kathy and I both eating half-warm, half-cold beef-and-bean burritos, which we had mistakenly thought were breakfast burritos; nasty, nasty!), we headed for Seattle.&lt;/p&gt;
+&lt;p&gt;The kids did absolutely great on the road.  We only made a few stops, including one in Pendleton, Oregon for lunch and a visit to a park (next to the Pendleton Roundup stadium). About an hour east of Seattle, driving on I-90, we hit the tail-end of a storm. It was a gorgeous stretch of drive! The clouds were low on the mountains, the freeway bent around the several curves of green hills, and the rain hit the windshield. It made me miss the Great Northwest!&lt;/p&gt;
+&lt;p&gt;We finally arrived at my sister's place at around 5:30. They fed us pizza, and we went to the shore of Lake Washington for a walk. The kids really enjoyed throwing rocks into the lake and eating blackberries, and I loved talking with my sister and brother-in-law whom I only see about once a year.&lt;/p&gt;
+&lt;p&gt;The next morning, we went on a nature walk in the Union Bay Nature Area, and ate some more blackberries, and enjoyed each other's company.  After that, we went to Church with them and heard some really good talks!  Then we went back to my sister's place for some delicious french-dip sandwiches, and then we drove down to Ridgefield, Washington where my parents live.&lt;/p&gt;
+&lt;p&gt;We arrived after 10pm, got settled in, and the next morning I headed out to DjangoCon. I'll blog about that later.&lt;/p&gt;
+&lt;p&gt;We stayed around the house for the first few evenings, but on Thursday evening, my family picked me up in Portland, and we went to Jamison Park to let the kids splash around in the water.  I love watching their excitement!  The find such wonder in the little joys of life.&lt;/p&gt;
+&lt;p&gt;Then we went to perhaps the most successful dinner we've had with the kids ever! We went to Yummy Mongolian Grill in Vancouver, WA.  We were able to get a table outside, and were by ourselves for most of the time.  The kids all dished up what they wanted to eat, and ate amazingly. Our five-year-old ate a lot of squid... and loved it.&lt;/p&gt;
+&lt;p&gt;Saturday evening, we went to a wedding reception of a friend of the family.  It was great to see them!  Then Sunday came, we thought we lost our three-year-old for a bit after Church was over, and we spent a lot of time around the house. I loved going outside with my Mom to pick some prunes for her trip to Alaska the next day.&lt;/p&gt;
+&lt;p&gt;The next day came, my parents had left before we awoke, we packed, cleaned, and headed out.  We made more stops on the way back than the way there, but we finally arrived back in Cedar Tuesday evening (Sep 9th).&lt;/p&gt;
+&lt;p&gt;It was a wonderful trip, it was awesome to be with my family and attend the conference, and now I am buried at work and with life in general. But life is good.&lt;/p&gt;
+&lt;p&gt;Oh, one more thing, we listened to Jim Gill's &lt;a href="http://store.jimgill.com/cd3.html"&gt;Do Re Mi on his Toe Leg Knee&lt;/a&gt; album probably about twenty times! It's our kids new favorite.&lt;/p&gt;</content></entry><entry><title>Wiring up node.js, socket.io, and Oracle (Oracle?)</title><link href="https://www.brycecaine.com/wiring-up-nodejs-socketio-and-oracle-oracle.html" rel="alternate"></link><published>2014-02-26T00:00:00-07:00</published><updated>2014-02-26T00:00:00-07:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2014-02-26:/wiring-up-nodejs-socketio-and-oracle-oracle.html</id><summary type="html">&lt;p&gt;Yep, Oracle.  While Oracle wouldn't have been my first choice for this functionality, the data we had to work with existed in Oracle, so we had to use the tools we had.  Here are the details.&lt;/p&gt;
+&lt;p&gt;Over the last couple days, my student worker and I have been trying to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Yep, Oracle.  While Oracle wouldn't have been my first choice for this functionality, the data we had to work with existed in Oracle, so we had to use the tools we had.  Here are the details.&lt;/p&gt;
+&lt;p&gt;Over the last couple days, my student worker and I have been trying to figure out how to push data to the browser based on changes in an Oracle database table.  Our first thought was that we would have to use &lt;a href="https://github.com/joeferner/node-oracle"&gt;a node-oracle package&lt;/a&gt; we found on GitHub.  The package worked nicely, and we were able to get it working, but the drawback was that we had to set a setTimeout for node to query Oracle and retrieve the data we needed.  We knew this wasn&amp;rsquo;t going to meet our needs for live data-pushing, but we didn&amp;rsquo;t know of any other way. That is, until we talked to our DBA.&lt;/p&gt;
+&lt;p&gt;Our DBA said it sounded like a job for a database trigger.  I knew of triggers, but thought they wouldn&amp;rsquo;t work in this case because we needed something to listen for a change and send an http request to a web application.  My excitement piqued when our DBA then mentioned the utl_http package that Oracle provides.  I gave our DBA the url we would be testing with, she set up the needed ACL (access control list), and we were off to the races to see if we could get this to hello-world.&lt;/p&gt;
+&lt;p&gt;The approach we took was to make a http post request from Oracle to our node server.  We set up node to handle the request and broadcast the post-request data to the browsers with open sockets to the node server.  After much experimenting and trial-and-error, we arrived at the following code (modified to exclude environment-specific information):&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://gist.github.com/brycecaine/9245496"&gt;gist&lt;/a&gt;&lt;/p&gt;</content></entry></feed>

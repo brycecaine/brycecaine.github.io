@@ -43,18 +43,23 @@
     <!-- Microsoft EDGE -->
     <meta name="msapplication-TileColor" content="#ABC">
 
-    <meta name="author" content="Bryce Caine" />
-    <meta name="description" content="Blog" />
+<meta name="author" content="Bryce Caine" />
+<meta name="description" content="Yep, Oracle. While Oracle wouldn&#39;t have been my first choice for this functionality, the data we had to work with existed in Oracle, so we had to use the tools we had. Here are the details. Over the last couple days, my student worker and I have been trying to …" />
+<meta name="keywords" content="">
+
 <meta property="og:site_name" content="Bryce Caine's Blog"/>
-<meta property="og:type" content="blog"/>
-<meta property="og:title" content="Bryce Caine's Blog"/>
-<meta property="og:description" content="Blog"/>
+<meta property="og:title" content="Wiring up node.js, socket.io, and Oracle (Oracle?)"/>
+<meta property="og:description" content="Yep, Oracle. While Oracle wouldn&#39;t have been my first choice for this functionality, the data we had to work with existed in Oracle, so we had to use the tools we had. Here are the details. Over the last couple days, my student worker and I have been trying to …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://www.brycecaine.com"/>
+<meta property="og:url" content="https://www.brycecaine.com/wiring-up-nodejs-socketio-and-oracle-oracle.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2014-02-26 00:00:00-07:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://www.brycecaine.com/author/bryce-caine.html">
+<meta property="article:section" content="misc"/>
 <meta property="og:image" content="https://www.brycecaine.com/images/brycecaine.jpg">
 
-  <title>Bryce Caine's Blog &ndash;     Authors
-</title>
+  <title>Bryce Caine's Blog &ndash; Wiring up node.js, socket.io, and Oracle (Oracle?)</title>
 
 <!-- Google Tag Manager -->
 <script>
@@ -117,14 +122,55 @@
 
 <article class="single">
   <header>
-    <h1>    Authors
-</h1>
+      
+    <h1 id="wiring-up-nodejs-socketio-and-oracle-oracle">Wiring up node.js, socket.io, and Oracle (Oracle?)</h1>
+    <p>
+          Posted on Wed 26 February 2014 in <a href="https://www.brycecaine.com/category/misc.html">misc</a>
+
+
+    </p>
   </header>
+
+
   <div>
-    <ul class="list">
-      <li><a href="https://www.brycecaine.com/author/bryce-caine.html">Bryce Caine</a> (11)</li>
-    </ul>
+    <p>Yep, Oracle.  While Oracle wouldn't have been my first choice for this functionality, the data we had to work with existed in Oracle, so we had to use the tools we had.  Here are the details.</p>
+<p>Over the last couple days, my student worker and I have been trying to figure out how to push data to the browser based on changes in an Oracle database table.  Our first thought was that we would have to use <a href="https://github.com/joeferner/node-oracle">a node-oracle package</a> we found on GitHub.  The package worked nicely, and we were able to get it working, but the drawback was that we had to set a setTimeout for node to query Oracle and retrieve the data we needed.  We knew this wasn&rsquo;t going to meet our needs for live data-pushing, but we didn&rsquo;t know of any other way. That is, until we talked to our DBA.</p>
+<p>Our DBA said it sounded like a job for a database trigger.  I knew of triggers, but thought they wouldn&rsquo;t work in this case because we needed something to listen for a change and send an http request to a web application.  My excitement piqued when our DBA then mentioned the utl_http package that Oracle provides.  I gave our DBA the url we would be testing with, she set up the needed ACL (access control list), and we were off to the races to see if we could get this to hello-world.</p>
+<p>The approach we took was to make a http post request from Oracle to our node server.  We set up node to handle the request and broadcast the post-request data to the browsers with open sockets to the node server.  After much experimenting and trial-and-error, we arrived at the following code (modified to exclude environment-specific information):</p>
+<p><a href="https://gist.github.com/brycecaine/9245496">gist</a></p>
   </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+  <div class="center social-share">
+    <p>    Like this article? Share it with your friends!
+</p>
+    <div class="addthis_native_toolbox"></div>
+    <div class="addthis_sharing_toolbox"></div>
+    <div class="addthis_inline_share_toolbox"></div>
+  </div>
+
+
+    <div class="addthis_relatedposts_inline"></div>
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'brycecaine';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
 </article>
 
     <footer>

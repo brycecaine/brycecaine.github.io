@@ -44,22 +44,22 @@
     <meta name="msapplication-TileColor" content="#ABC">
 
 <meta name="author" content="Bryce Caine" />
-<meta name="description" content="Following is a review of my favorite mechanical keyboard." />
+<meta name="description" content="There&#39;s something super satisfying about having a development VM in the cloud. I can ssh to it from any device, tmux to persist sessions, and develop with vim virtually anywhere. So I decided to start learning more about test-driven development. I saw good reviews for &#34;Test-Driven Development with Python, 2nd …" />
 <meta name="keywords" content="">
 
 <meta property="og:site_name" content="Bryce Caine's Blog"/>
-<meta property="og:title" content="My First Review"/>
-<meta property="og:description" content="Following is a review of my favorite mechanical keyboard."/>
+<meta property="og:title" content="Running Selenium in Headless Mode with Firefox"/>
+<meta property="og:description" content="There&#39;s something super satisfying about having a development VM in the cloud. I can ssh to it from any device, tmux to persist sessions, and develop with vim virtually anywhere. So I decided to start learning more about test-driven development. I saw good reviews for &#34;Test-Driven Development with Python, 2nd …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://www.brycecaine.com/my-first-review.html"/>
+<meta property="og:url" content="https://www.brycecaine.com/running-selenium-in-headless-mode-with-firefox.html"/>
 <meta property="og:type" content="article"/>
-<meta property="article:published_time" content="2010-12-03 10:20:00-07:00"/>
+<meta property="article:published_time" content="2018-04-11 00:00:00-06:00"/>
 <meta property="article:modified_time" content=""/>
 <meta property="article:author" content="https://www.brycecaine.com/author/bryce-caine.html">
-<meta property="article:section" content="Review"/>
+<meta property="article:section" content="misc"/>
 <meta property="og:image" content="https://www.brycecaine.com/images/brycecaine.jpg">
 
-  <title>Bryce Caine's Blog &ndash; My First Review</title>
+  <title>Bryce Caine's Blog &ndash; Running Selenium in Headless Mode with Firefox</title>
 
 <!-- Google Tag Manager -->
 <script>
@@ -123,9 +123,9 @@
 <article class="single">
   <header>
       
-    <h1 id="my-first-review">My First Review</h1>
+    <h1 id="running-selenium-in-headless-mode-with-firefox">Running Selenium in Headless Mode with Firefox</h1>
     <p>
-          Posted on Fri 03 December 2010 in <a href="https://www.brycecaine.com/category/review.html">Review</a>
+          Posted on Wed 11 April 2018 in <a href="https://www.brycecaine.com/category/misc.html">misc</a>
 
 
     </p>
@@ -133,7 +133,47 @@
 
 
   <div>
-    <p>Following is a review of my favorite mechanical keyboard.</p>
+    <p>There's something super satisfying about having a development VM in the cloud. I can ssh to it from any device, tmux to persist sessions, and develop with vim virtually anywhere.</p>
+<p>So I decided to start learning more about test-driven development. I saw good reviews for "Test-Driven Development with Python, 2nd Edition" by Harry J.W. Percival, so I thought I'd start reading it to augment side projects and other learning.</p>
+<p>To merge the two ideas--a VM in the cloud and test-driven development with Django and Selenium--I needed to go headless. So here's how I set up my Ubuntu 17.10 environment.</p>
+<p>These notes are based on Chapter 1. "Getting Django Set Up Using a Functional Test", and the package versions match the book requirements.</p>
+<h3>Set up the needed python environment and packages</h3>
+<div class="highlight"><pre><span></span>sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install python3-pip
+sudo pip3 install virtualenv
+virtualenv tddp
+<span class="nb">source</span> tddp/bin/activate
+pip3 install <span class="nv">Django</span><span class="o">==</span><span class="m">1</span>.11.8
+pip3 install <span class="nv">selenium</span><span class="o">==</span><span class="m">3</span>.9.0
+wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
+tar -xvzf geckodriver-v0.19.1-linux64.tar.gz
+sudo cp geckodriver /usr/local/bin/
+</pre></div>
+
+
+<h3>Modify the functional_tests.py script</h3>
+<h4>From the book</h4>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+
+<span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
+<span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://localhost:8000&#39;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="s1">&#39;Django&#39;</span> <span class="ow">in</span> <span class="n">browser</span><span class="o">.</span><span class="n">title</span>
+</pre></div>
+
+
+<h4>Modified version to support headless</h4>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.firefox.options</span> <span class="kn">import</span> <span class="n">Options</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">Options</span><span class="p">()</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--headless&quot;</span><span class="p">)</span>
+<span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">(</span><span class="n">firefox_options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+<span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://localhost:8000&#39;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="s1">&#39;Django&#39;</span> <span class="ow">in</span> <span class="n">browser</span><span class="o">.</span><span class="n">title</span>
+</pre></div>
   </div>
   <div class="tag-cloud">
     <p>

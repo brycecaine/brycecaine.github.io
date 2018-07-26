@@ -43,18 +43,23 @@
     <!-- Microsoft EDGE -->
     <meta name="msapplication-TileColor" content="#ABC">
 
-    <meta name="author" content="Bryce Caine" />
-    <meta name="description" content="Blog" />
+<meta name="author" content="Bryce Caine" />
+<meta name="description" content="Here is how I implemented New Relic on an app I&#39;m hosting on Open Shift. From my home directory after ssh&#39;ing to my openshift box: Activate the python virtual environment source ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate Install the newrelic python package pip install newrelic Generate agent config …" />
+<meta name="keywords" content="">
+
 <meta property="og:site_name" content="Bryce Caine's Blog"/>
-<meta property="og:type" content="blog"/>
-<meta property="og:title" content="Bryce Caine's Blog"/>
-<meta property="og:description" content="Blog"/>
+<meta property="og:title" content="New Relic on Open Shift"/>
+<meta property="og:description" content="Here is how I implemented New Relic on an app I&#39;m hosting on Open Shift. From my home directory after ssh&#39;ing to my openshift box: Activate the python virtual environment source ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate Install the newrelic python package pip install newrelic Generate agent config …"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://www.brycecaine.com"/>
+<meta property="og:url" content="https://www.brycecaine.com/new-relic-on-open-shift.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2014-09-19 00:00:00-06:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://www.brycecaine.com/author/bryce-caine.html">
+<meta property="article:section" content="misc"/>
 <meta property="og:image" content="https://www.brycecaine.com/images/brycecaine.jpg">
 
-  <title>Bryce Caine's Blog &ndash;     Authors
-</title>
+  <title>Bryce Caine's Blog &ndash; New Relic on Open Shift</title>
 
 <!-- Google Tag Manager -->
 <script>
@@ -117,14 +122,86 @@
 
 <article class="single">
   <header>
-    <h1>    Authors
-</h1>
+      
+    <h1 id="new-relic-on-open-shift">New Relic on Open Shift</h1>
+    <p>
+          Posted on Fri 19 September 2014 in <a href="https://www.brycecaine.com/category/misc.html">misc</a>
+
+
+    </p>
   </header>
+
+
   <div>
-    <ul class="list">
-      <li><a href="https://www.brycecaine.com/author/bryce-caine.html">Bryce Caine</a> (11)</li>
-    </ul>
+    <p>Here is how I implemented New Relic on an app I'm hosting on Open Shift.</p>
+<p>From my home directory after ssh'ing to my openshift box:</p>
+<p>Activate the python virtual environment</p>
+<div class="highlight"><pre><span></span><span class="nb">source</span> ./app-deployments/2014-04-06_04-22-25.079/dependencies/python/virtenv/bin/activate
+</pre></div>
+
+
+<p>Install the newrelic python package</p>
+<div class="highlight"><pre><span></span>pip install newrelic
+</pre></div>
+
+
+<p>Generate agent config file</p>
+<div class="highlight"><pre><span></span>newrelic-admin generate-config NEW-RELIC-LICENSE-KEY ./app-root/runtime/dependencies/python/virtenv/lib/python2.7/site-packages/newrelic-2.30.0.27/newrelic/newrelic.ini
+</pre></div>
+
+
+<p>Test that it's working</p>
+<div class="highlight"><pre><span></span>newrelic-admin validate-config ./app-root/runtime/dependencies/python/virtenv/lib/python2.7/site-packages/newrelic-2.30.0.27/newrelic/newrelic.ini
+</pre></div>
+
+
+<p>Modify the wsgi script</p>
+<div class="highlight"><pre><span></span><span class="nb">cd</span> app-root/runtime/repo/wsgi/
+vim application
+</pre></div>
+
+
+<p>Add these two lines to the top:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">newrelic.agent</span>
+<span class="n">newrelic</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s1">&#39;./app-root/runtime/dependencies/python/virtenv/lib/python2.7/site-packages/newrelic-2.30.0.27/newrelic/newrelic.ini&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Reference:
+<a href="https://docs.newrelic.com/docs/agents/python-agent/getting-started/python-agent-quick-start">New Relic</a></p>
   </div>
+  <div class="tag-cloud">
+    <p>
+    </p>
+  </div>
+
+  <div class="center social-share">
+    <p>    Like this article? Share it with your friends!
+</p>
+    <div class="addthis_native_toolbox"></div>
+    <div class="addthis_sharing_toolbox"></div>
+    <div class="addthis_inline_share_toolbox"></div>
+  </div>
+
+
+    <div class="addthis_relatedposts_inline"></div>
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'brycecaine';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
 </article>
 
     <footer>
