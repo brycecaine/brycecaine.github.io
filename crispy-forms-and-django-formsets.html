@@ -34,18 +34,26 @@
 </script>
 <!-- End Google Analytics -->
 
-    <meta name="author" content="Bryce Caine" />
-    <meta name="description" content="Blog" />
+<meta name="author" content="Bryce Caine" />
+<meta name="description" content="How to make sure form tags are proper when adding a crispy-form formset to an existing crispy form in a django template" />
+<meta name="keywords" content="forms, crispy-forms, django">
+
 <meta property="og:site_name" content="Bryce Caine's Blog"/>
-<meta property="og:type" content="blog"/>
-<meta property="og:title" content="Bryce Caine's Blog"/>
-<meta property="og:description" content="Blog"/>
+<meta property="og:title" content="Crispy Forms and Django Formsets"/>
+<meta property="og:description" content="How to make sure form tags are proper when adding a crispy-form formset to an existing crispy form in a django template"/>
 <meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://www.brycecaine.com"/>
+<meta property="og:url" content="https://www.brycecaine.com/crispy-forms-and-django-formsets"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2019-01-09 00:00:00-07:00"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="https://www.brycecaine.com/author/bryce-caine.html">
+<meta property="article:section" content="misc"/>
+<meta property="article:tag" content="forms"/>
+<meta property="article:tag" content="crispy-forms"/>
+<meta property="article:tag" content="django"/>
 <meta property="og:image" content="https://www.brycecaine.com/images/brycecaine.jpg">
 
-  <title>Bryce Caine's Blog &ndash;     Tag node
-</title>
+  <title>Bryce Caine's Blog &ndash; Crispy Forms and Django Formsets</title>
 
 <!-- Google Tag Manager -->
 <script>
@@ -107,34 +115,59 @@
 
     </nav>
 
-
-
-<article>
+<article class="single">
   <header>
-    <h2><a href="https://www.brycecaine.com/wiring-up-nodejs-socketio-and-oracle-oracle#wiring-up-nodejs-socketio-and-oracle-oracle">Wiring up node.js, socket.io, and Oracle (Oracle?)</a></h2>
+      
+    <h1 id="crispy-forms-and-django-formsets">Crispy Forms and Django Formsets</h1>
     <p>
-          Posted on Wed 26 February 2014 in <a href="https://www.brycecaine.com/category/misc.html">misc</a>
+          Posted on Wed 09 January 2019 in <a href="https://www.brycecaine.com/category/misc.html">misc</a>
 
 
-          &#8226;     Tagged with
-
-              <a href="https://www.brycecaine.com/tag/node.html">node</a>,              <a href="https://www.brycecaine.com/tag/oracle.html">oracle</a>,              <a href="https://www.brycecaine.com/tag/socketio.html">socketio</a>,              <a href="https://www.brycecaine.com/tag/web.html">web</a>,              <a href="https://www.brycecaine.com/tag/development.html">development</a>
     </p>
   </header>
+
+
   <div>
-      <p>Yep, Oracle.  While Oracle wouldn't have been my first choice for this functionality, the data we had to work with existed in Oracle, so we had to use the tools we had.  Here are the details.</p>
-<p>Over the last couple days, my student worker and I have been trying to …</p>
-      <br>
-      <a class="btn" href="https://www.brycecaine.com/wiring-up-nodejs-socketio-and-oracle-oracle#wiring-up-nodejs-socketio-and-oracle-oracle">    Continue reading
-</a>
+    <p>The other day I attempted to add <code>{% crispy formset %}</code> to my an existing form in my html (within a form tag). Crispy form's default behavior was to add a form tag when rendering its html. This caused a conflict of form tags.</p>
+<p>The formset was generated using <code>inlineformset_factory</code>, which doesn’t have a <code>form_tag</code> parameter. So I created a form with an <strong>init</strong> method and set the <code>helper.form_tag</code> variable to False. Then I passed that form into the <code>inlineformset_factory</code>, and it resolved the issue.</p>
+<p>The reason I'm documenting this is that the initial symptom was that after I had added <code>{% crispy formset %}</code> at first, the form wouldn’t submit or even trigger the missing-field js boxes. The behavior was ellusive to troubleshoot. Hope this helps someone else too.</p>
   </div>
+  <div class="tag-cloud">
+    <p>
+      <a href="https://www.brycecaine.com/tag/forms.html">forms</a>
+      <a href="https://www.brycecaine.com/tag/crispy-forms.html">crispy-forms</a>
+      <a href="https://www.brycecaine.com/tag/django.html">django</a>
+    </p>
+  </div>
+
+  <div class="center social-share">
+    <p>    Like this article? Share it with your friends!
+</p>
+    <div class="addthis_native_toolbox"></div>
+    <div class="addthis_sharing_toolbox"></div>
+    <div class="addthis_inline_share_toolbox"></div>
+  </div>
+
+
+    <div class="addthis_relatedposts_inline"></div>
+
+
+<!-- Disqus -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'brycecaine';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>
+        Please enable JavaScript to view comments.
+
+</noscript>
+<!-- End Disqus -->
 </article>
-
-  <div class="pagination">
-  </div>
-
-
-
 
     <footer>
 <p>&copy;  2019</p>

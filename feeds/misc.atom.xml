@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Bryce Caine's Blog - misc</title><link href="https://www.brycecaine.com/" rel="alternate"></link><link href="https://www.brycecaine.com/feeds/misc.atom.xml" rel="self"></link><id>https://www.brycecaine.com/</id><updated>2018-04-13T00:00:00-06:00</updated><entry><title>Exploring Data Streams</title><link href="https://www.brycecaine.com/exploring-data-streams" rel="alternate"></link><published>2018-04-13T00:00:00-06:00</published><updated>2018-04-13T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2018-04-13:/exploring-data-streams</id><summary type="html">&lt;p&gt;Apache Kafka has me pretty excited about enterprise data architecture!&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Resources&lt;/h3&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Bryce Caine's Blog - misc</title><link href="https://www.brycecaine.com/" rel="alternate"></link><link href="https://www.brycecaine.com/feeds/misc.atom.xml" rel="self"></link><id>https://www.brycecaine.com/</id><updated>2019-01-09T00:00:00-07:00</updated><subtitle>Dad, Data, Developer</subtitle><entry><title>Crispy Forms and Django Formsets</title><link href="https://www.brycecaine.com/crispy-forms-and-django-formsets" rel="alternate"></link><published>2019-01-09T00:00:00-07:00</published><updated>2019-01-09T00:00:00-07:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2019-01-09:/crispy-forms-and-django-formsets</id><summary type="html">&lt;p&gt;How to make sure form tags are proper when adding a crispy-form formset to an existing crispy form in a django template&lt;/p&gt;</summary><content type="html">&lt;p&gt;The other day I attempted to add &lt;code&gt;{% crispy formset %}&lt;/code&gt; to my an existing form in my html (within a form tag). Crispy form's default behavior was to add a form tag when rendering its html. This caused a conflict of form tags.&lt;/p&gt;
+&lt;p&gt;The formset was generated using &lt;code&gt;inlineformset_factory&lt;/code&gt;, which doesn’t have a &lt;code&gt;form_tag&lt;/code&gt; parameter. So I created a form with an &lt;strong&gt;init&lt;/strong&gt; method and set the &lt;code&gt;helper.form_tag&lt;/code&gt; variable to False. Then I passed that form into the &lt;code&gt;inlineformset_factory&lt;/code&gt;, and it resolved the issue.&lt;/p&gt;
+&lt;p&gt;The reason I'm documenting this is that the initial symptom was that after I had added &lt;code&gt;{% crispy formset %}&lt;/code&gt; at first, the form wouldn’t submit or even trigger the missing-field js boxes. The behavior was ellusive to troubleshoot. Hope this helps someone else too.&lt;/p&gt;</content><category term="forms"></category><category term="crispy-forms"></category><category term="django"></category></entry><entry><title>Exploring Data Streams</title><link href="https://www.brycecaine.com/exploring-data-streams" rel="alternate"></link><published>2018-04-13T00:00:00-06:00</published><updated>2018-04-13T00:00:00-06:00</updated><author><name>Bryce Caine</name></author><id>tag:www.brycecaine.com,2018-04-13:/exploring-data-streams</id><summary type="html">&lt;p&gt;Apache Kafka has me pretty excited about enterprise data architecture!&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Resources&lt;/h3&gt;
 &lt;p&gt;Good read on why data streams should be considered first-class citizens in data infrastructure: &lt;a href="https://www.confluent.io/blog/the-future-of-etl-isnt-what-it-used-to-be"&gt;The Future of ETL Isn’t What It Used To Be&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Interesting video on using a streaming platform for ETL: &lt;a href="https://vimeo.com/220846693/305dfdb663"&gt;ETL is Dead! Long Live Streams&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;Thoughts&lt;/h3&gt;
@@ -114,7 +116,7 @@ sudo cp geckodriver /usr/local/bin/
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;matplotlib.text.Text at 0x11a7799d0&amp;gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;amp;lt;matplotlib.text.Text at 0x11a7799d0&amp;amp;gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -148,7 +150,7 @@ sudo cp geckodriver /usr/local/bin/
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;matplotlib.text.Text at 0x124c7c250&amp;gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;amp;lt;matplotlib.text.Text at 0x124c7c250&amp;amp;gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
