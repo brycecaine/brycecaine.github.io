@@ -1,11 +1,15 @@
 <footer class="site-footer">
   <div class="wrapper">
+
     <ul class="social-media-list">
       {% for link in site.minima.social_links %}
         <li>
-          <a href="{{ link.user_url }}">{{ link.platform | capitalize }}</a>
+          <a href="{{ link.user_url }}" rel="noopener noreferrer" target="_blank" title="{{ link.platform }}">
+            {% include social-icon.html platform=link.platform %}
+          </a>
         </li>
       {% endfor %}
     </ul>
+
   </div>
 </footer>
