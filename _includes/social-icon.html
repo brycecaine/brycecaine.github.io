@@ -1,0 +1,9 @@
+{%- assign svg = site.data.social-icons[include.platform] -%}
+{%- if svg -%}
+  <svg class="svg-icon">
+    <use xlink:href="{{ svg | relative_url }}"></use>
+  </svg>
+  <span class="username">{{ include.platform }}</span>
+{%- else -%}
+  {{ include.platform }}
+{%- endif -%}
