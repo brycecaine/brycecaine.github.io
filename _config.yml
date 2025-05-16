@@ -3,6 +3,9 @@ theme: minima
 baseurl: "" 
 url: "https://brycecaine.github.io"
 markdown: kramdown
+header_pages:
+  - index.md
+  - blog.md
 
 plugins:
   - jekyll-feed
