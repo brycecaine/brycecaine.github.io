@@ -1,0 +1,24 @@
+title: My Simple Blog
+description: A super lightweight blog using GitHub Pages and Prose.io
+theme: minima
+baseurl: "" 
+url: "https://brycecaine.github.io"
+markdown: kramdown
+
+plugins:
+  - jekyll-feed
+
+prose:
+  rooturl: "_posts"
+  siteurl: "https://brycecaine.github.io"
+  media: "assets"
+  metadata:
+    _posts:
+      - name: "title"
+        field:
+          element: "text"
+          label: "Post Title"
+      - name: "layout"
+        field:
+          element: "hidden"
+          value: "post"
